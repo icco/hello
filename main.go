@@ -5,7 +5,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-	// "gopkg.in/unrolled/secure.v1"
+
+	"github.com/justinas/alice"
+	"gopkg.in/unrolled/secure.v1"
 )
 
 func main() {
@@ -14,8 +16,28 @@ func main() {
 		port = fromEnv
 	}
 
+	development := os.Getenv("RACK_ENV") == "development"
+	s := secure.New(secure.Options{
+		AllowedHosts:          []string{"hello.natwelch.com"},
+		HostsProxyHeaders:     []string{"X-Forwarded-Host"},
+		SSLRedirect:           true,
+		SSLHost:               "hello.natwelch.com",
+		SSLProxyHeaders:       map[string]string{"X-Forwarded-Proto": "https"},
+		STSIncludeSubdomains:  false,
+		STSPreload:            false,
+		FrameDeny:             true,
+		ContentTypeNosniff:    true,
+		BrowserXssFilter:      true,
+		ContentSecurityPolicy: "default-src 'self'",
+		ReferrerPolicy:        "same-origin",
+		IsDevelopment:         development,
+	})
+	secHandler := s.Handler
+
+	commonHandlers := alice.New(secHandler)
+
 	server := http.NewServeMux()
-	server.HandleFunc("/", hello)
+	server.Handle("/", commonHandlers.ThenFunc(hello))
 	server.HandleFunc("/204", twoOhFour)
 
 	log.Printf("Server listening on port %s", port)
