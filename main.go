@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gorilla/handlers"
 	"github.com/justinas/alice"
 	"gopkg.in/unrolled/secure.v1"
 )
@@ -39,8 +40,10 @@ func main() {
 	server.HandleFunc("/healthz", hello)
 	server.HandleFunc("/204", twoOhFour)
 
+	loggedRouter := handlers.LoggingHandler(os.Stdout, server)
+
 	log.Printf("Server listening on port %s", port)
-	log.Fatal(http.ListenAndServe(":"+port, server))
+	log.Fatal(http.ListenAndServe(":"+port, loggedRouter))
 }
 
 type HelloRespJson struct {
