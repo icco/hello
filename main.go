@@ -38,7 +38,7 @@ func main() {
 
 	server := http.NewServeMux()
 	server.Handle("/", commonHandlers.ThenFunc(hello))
-	server.Handle("/healthz", hello)
+	server.HandleFunc("/healthz", hello)
 	server.HandleFunc("/204", twoOhFour)
 
 	log.Printf("Server listening on port %s", port)
