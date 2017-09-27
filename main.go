@@ -18,8 +18,7 @@ func main() {
 
 	development := os.Getenv("RACK_ENV") == "development"
 	s := secure.New(secure.Options{
-		HostsProxyHeaders:     []string{"X-Forwarded-Host"},
-		SSLRedirect:           true,
+		SSLRedirect:           false,
 		SSLHost:               "hello.natwelch.com",
 		SSLProxyHeaders:       map[string]string{"X-Forwarded-Proto": "https"},
 		STSIncludeSubdomains:  false,
