@@ -52,7 +52,6 @@ type HelloRespJson struct {
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Serving request: %s", r.URL.Path)
 	resp := HelloRespJson{"ok", "Hello World"}
 
 	js, err := json.Marshal(resp)
