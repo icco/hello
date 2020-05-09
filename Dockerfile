@@ -1,10 +1,16 @@
-FROM golang:1.9
+FROM golang:1.14-alpine
 
-WORKDIR /go/src/app
-COPY . .
-
-RUN go-wrapper download   # "go get -d -v ./..."
-RUN go-wrapper install    # "go install -v ./..."
+ENV GOPROXY="https://proxy.golang.org"
+ENV GO111MODULE="on"
+ENV NAT_ENV="production"
 
 EXPOSE 8080
-CMD ["go-wrapper", "run"] # ["app"]
+
+WORKDIR /go/src/github.com/icco/hello
+
+RUN apk add --no-cache git
+COPY . .
+
+RUN go build -v -o /go/bin/server ./server
+
+CMD ["/go/bin/server"]
