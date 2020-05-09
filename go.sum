@@ -1,0 +1,6 @@
+github.com/gorilla/handlers v1.4.2 h1:0QniY0USkHQ1RGCLfKxeNHK9bkDHGRYGNDFBCS+YARg=
+github.com/gorilla/handlers v1.4.2/go.mod h1:Qkdc/uu4tH4g6mTK6auzZ766c4CA0Ng8+o/OAirnOIQ=
+github.com/justinas/alice v1.2.0 h1:+MHSA/vccVCF4Uq37S42jwlkvI2Xzl7zTPCN5BnZNVo=
+github.com/justinas/alice v1.2.0/go.mod h1:fN5HRH/reO/zrUflLfTN43t3vXvKzvZIENsNEe7i7qA=
+gopkg.in/unrolled/secure.v1 v1.0.0 h1:2HVb4NzBPCMbw7pL2Z/lh0IPNnLVUoONtgRbvLiDqE8=
+gopkg.in/unrolled/secure.v1 v1.0.0/go.mod h1:pg8V8gdKceNGAVsmUaeFnZ49s30z9L4RkCXd4Y8vEtU=
