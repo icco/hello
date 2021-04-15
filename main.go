@@ -2,14 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/icco/gutil/logging"
-	"gopkg.in/unrolled/secure.v1"
 )
 
 var (
@@ -28,22 +27,6 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.RealIP)
 	r.Use(logging.Middleware(log.Desugar(), project))
-
-	development := os.Getenv("RACK_ENV") == "development"
-	s := secure.New(secure.Options{
-		SSLRedirect:           false,
-		SSLHost:               "hello.natwelch.com",
-		SSLProxyHeaders:       map[string]string{"X-Forwarded-Proto": "https"},
-		STSIncludeSubdomains:  false,
-		STSPreload:            false,
-		FrameDeny:             true,
-		ContentTypeNosniff:    true,
-		BrowserXssFilter:      true,
-		ContentSecurityPolicy: "default-src 'self'",
-		ReferrerPolicy:        "same-origin",
-		IsDevelopment:         development,
-	})
-	r.Use(s.Handler)
 
 	r.Get("/", hello)
 	r.Get("/healthz", hello)
