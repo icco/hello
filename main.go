@@ -2,13 +2,19 @@ package main
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 	"os"
 
-	"github.com/gorilla/handlers"
-	"github.com/justinas/alice"
-	"gopkg.in/unrolled/secure.v1"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/icco/gutil/logging"
+)
+
+var (
+	service = "hello"
+	project = "icco-cloud"
+	log     = logging.Must(logging.NewLogger(service))
 )
 
 func main() {
@@ -16,34 +22,17 @@ func main() {
 	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
 		port = fromEnv
 	}
+	log.Infow("Starting up", "host", fmt.Sprintf("http://localhost:%s", port))
 
-	development := os.Getenv("RACK_ENV") == "development"
-	s := secure.New(secure.Options{
-		SSLRedirect:           false,
-		SSLHost:               "hello.natwelch.com",
-		SSLProxyHeaders:       map[string]string{"X-Forwarded-Proto": "https"},
-		STSIncludeSubdomains:  false,
-		STSPreload:            false,
-		FrameDeny:             true,
-		ContentTypeNosniff:    true,
-		BrowserXssFilter:      true,
-		ContentSecurityPolicy: "default-src 'self'",
-		ReferrerPolicy:        "same-origin",
-		IsDevelopment:         development,
-	})
-	secHandler := s.Handler
+	r := chi.NewRouter()
+	r.Use(middleware.RealIP)
+	r.Use(logging.Middleware(log.Desugar(), project))
 
-	commonHandlers := alice.New(secHandler)
+	r.Get("/", hello)
+	r.Get("/healthz", hello)
+	r.HandleFunc("/204", twoOhFour)
 
-	server := http.NewServeMux()
-	server.Handle("/", commonHandlers.ThenFunc(hello))
-	server.HandleFunc("/healthz", hello)
-	server.HandleFunc("/204", twoOhFour)
-
-	loggedRouter := handlers.LoggingHandler(os.Stdout, server)
-
-	log.Printf("Server listening on port %s", port)
-	log.Fatal(http.ListenAndServe(":"+port, loggedRouter))
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }
 
 type HelloRespJson struct {
