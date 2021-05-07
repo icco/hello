@@ -35,13 +35,13 @@ func main() {
 	log.Fatal(http.ListenAndServe(":"+port, r))
 }
 
-type HelloRespJson struct {
+type helloRespJSON struct {
 	Status  string `json:"status"`
 	Message string `json:"msg"`
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	resp := HelloRespJson{"ok", "Hello World"}
+	resp := helloRespJSON{"ok", "Hello World"}
 
 	js, err := json.Marshal(resp)
 	if err != nil {
