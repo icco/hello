@@ -5,6 +5,7 @@ go 1.22
 require (
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/icco/gutil v0.0.0-20231226055340-e0dfddaad70c
+	github.com/unrolled/secure v1.17.0
 )
 
 require (
