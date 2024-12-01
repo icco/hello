@@ -63,6 +63,8 @@ func hello(format string) http.HandlerFunc {
 		w.Header().Set("reporting-endpoints", `default="https://reportd.natwelch.com/reporting/hello"`)
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("nel", `{"report_to":"default","max_age":2592000}`)
+		w.Header().Set("Feature-Policy", "geolocation 'none'; midi 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; fullscreen 'self'; payment 'none'; usb 'none'")
+		w.Header().Set("Referrer-Policy", "no-referrer")
 
 		switch format {
 		case "json":
