@@ -26,15 +26,12 @@ func main() {
 	log.Infow("Starting up", "host", fmt.Sprintf("http://localhost:%s", port))
 
 	secureMiddleware := secure.New(secure.Options{
-		AllowedHosts:          []string{"hello.natwelch.com"},
-		HostsProxyHeaders:     []string{"X-Forwarded-Host"},
-		SSLRedirect:           true,
-		SSLHost:               "hello.natwelch.com",
+		SSLRedirect:           false,
 		SSLProxyHeaders:       map[string]string{"X-Forwarded-Proto": "https"},
 		FrameDeny:             true,
 		ContentTypeNosniff:    true,
 		BrowserXssFilter:      true,
-		ContentSecurityPolicy: "default-src 'self'",
+		ContentSecurityPolicy: "default-src 'self'; report-uri https://reportd.natwelch.com/report/hello; report-to default",
 	})
 
 	r := chi.NewRouter()
@@ -63,7 +60,12 @@ func hello(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Cache-Control", "no-store")
+	w.Header().Set("Pragma", "no-cache")
+	w.Header().Set("report-to", `{"group":"default","max_age":10886400,"endpoints":[{"url":"https://reportd.natwelch.com/report/hello"}]}`)
+	w.Header().Set("reporting-endpoints", `default="https://reportd.natwelch.com/reporting/hello"`)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("nel", `{"report_to":"default","max_age":2592000}`)
 	w.Write(js)
 }
 
