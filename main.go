@@ -26,19 +26,15 @@ func main() {
 	log.Infow("Starting up", "host", fmt.Sprintf("http://localhost:%s", port))
 
 	secureMiddleware := secure.New(secure.Options{
-		AllowedHosts:          []string{"example\\.com", ".*\\.example\\.com"},
-		AllowedHostsAreRegex:  true,
+		AllowedHosts:          []string{"hello.natwelch.com"},
 		HostsProxyHeaders:     []string{"X-Forwarded-Host"},
 		SSLRedirect:           true,
-		SSLHost:               "ssl.example.com",
+		SSLHost:               "hello.natwelch.com",
 		SSLProxyHeaders:       map[string]string{"X-Forwarded-Proto": "https"},
-		STSSeconds:            31536000,
-		STSIncludeSubdomains:  true,
-		STSPreload:            true,
 		FrameDeny:             true,
 		ContentTypeNosniff:    true,
 		BrowserXssFilter:      true,
-		ContentSecurityPolicy: "script-src $NONCE",
+		ContentSecurityPolicy: "default-src 'self'",
 	})
 
 	r := chi.NewRouter()
