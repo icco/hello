@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -9,6 +8,7 @@ import (
 	chi "github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/icco/gutil/logging"
+	"github.com/unrolled/render"
 	"github.com/unrolled/secure"
 )
 
@@ -39,8 +39,9 @@ func main() {
 	r.Use(logging.Middleware(log.Desugar(), project))
 	r.Use(secureMiddleware.Handler)
 
-	r.Get("/", hello)
-	r.Get("/healthz", hello)
+	r.Get("/", hello("html"))
+	r.Get("/json", hello("json"))
+	r.Get("/healthz", hello("json"))
 	r.HandleFunc("/204", twoOhFour)
 
 	log.Fatal(http.ListenAndServe(":"+port, r))
@@ -51,22 +52,27 @@ type helloRespJSON struct {
 	Message string `json:"msg"`
 }
 
-func hello(w http.ResponseWriter, r *http.Request) {
-	resp := helloRespJSON{"ok", "Hello World"}
+func hello(format string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		resp := helloRespJSON{"ok", "Hello World"}
+		re := render.New()
 
-	js, err := json.Marshal(resp)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		w.Header().Set("Cache-Control", "no-store")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("report-to", `{"group":"default","max_age":10886400,"endpoints":[{"url":"https://reportd.natwelch.com/report/hello"}]}`)
+		w.Header().Set("reporting-endpoints", `default="https://reportd.natwelch.com/reporting/hello"`)
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("nel", `{"report_to":"default","max_age":2592000}`)
+
+		switch format {
+		case "json":
+			re.JSON(w, http.StatusOK, resp)
+		case "html":
+			re.HTML(w, http.StatusOK, "hello", resp)
+		default:
+			http.Error(w, "invalid format", http.StatusBadRequest)
+		}
 	}
-
-	w.Header().Set("Cache-Control", "no-store")
-	w.Header().Set("Pragma", "no-cache")
-	w.Header().Set("report-to", `{"group":"default","max_age":10886400,"endpoints":[{"url":"https://reportd.natwelch.com/report/hello"}]}`)
-	w.Header().Set("reporting-endpoints", `default="https://reportd.natwelch.com/reporting/hello"`)
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("nel", `{"report_to":"default","max_age":2592000}`)
-	w.Write(js)
 }
 
 func twoOhFour(w http.ResponseWriter, r *http.Request) {
