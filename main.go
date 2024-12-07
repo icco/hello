@@ -33,7 +33,7 @@ func main() {
 		BrowserXssFilter:      true,
 		ContentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; connect-src 'self' https://reportd.natwelch.com; report-uri https://reportd.natwelch.com/report/hello; report-to default",
 		ReferrerPolicy:        "no-referrer",
-		FeaturePolicy:         "geolocation 'none'; midi 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; fullscreen 'none'; payment 'none'; usb 'none'",
+		FeaturePolicy:         "geolocation 'none'; midi 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; fullscreen 'none'; payment 'none'; usb 'none'",
 	})
 
 	r := chi.NewRouter()
