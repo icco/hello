@@ -3,7 +3,7 @@ module github.com/icco/hello
 go 1.22
 
 require (
-	github.com/go-chi/chi/v5 v5.1.0
+	github.com/go-chi/chi/v5 v5.2.1
 	github.com/icco/gutil v0.0.0-20231226055340-e0dfddaad70c
 	github.com/unrolled/render v1.7.0
 	github.com/unrolled/secure v1.17.0
