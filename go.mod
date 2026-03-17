@@ -5,7 +5,7 @@ go 1.24.0
 toolchain go1.24.1
 
 require (
-	github.com/go-chi/chi/v5 v5.2.3
+	github.com/go-chi/chi/v5 v5.2.5
 	github.com/icco/gutil v0.0.0-20250523221334-351f1696528b
 	github.com/unrolled/render v1.7.0
 	github.com/unrolled/secure v1.17.0
