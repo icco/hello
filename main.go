@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"net/http"
 	"os"
@@ -12,6 +13,9 @@ import (
 	"github.com/unrolled/render"
 	"github.com/unrolled/secure"
 )
+
+//go:embed templates
+var embeddedTemplates embed.FS
 
 var (
 	service = "hello"
@@ -66,7 +70,9 @@ type helloRespJSON struct {
 func hello(format string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		resp := helloRespJSON{"ok", "Hello World"}
-		re := render.New()
+		re := render.New(render.Options{
+				FileSystem: &render.EmbedFileSystem{FS: embeddedTemplates},
+			})
 
 		w.Header().Set("Cache-Control", "no-store")
 		w.Header().Set("Pragma", "no-cache")
