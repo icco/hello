@@ -43,7 +43,7 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Use(middleware.RealIP)
-	r.Use(logging.Middleware(log.Desugar(), project))
+	r.Use(logging.Middleware(log.Desugar()))
 	r.Use(secureMiddleware.Handler)
 
 	r.Get("/", hello("html"))
@@ -71,8 +71,8 @@ func hello(format string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		resp := helloRespJSON{"ok", "Hello World"}
 		re := render.New(render.Options{
-				FileSystem: &render.EmbedFileSystem{FS: embeddedTemplates},
-			})
+			FileSystem: &render.EmbedFileSystem{FS: embeddedTemplates},
+		})
 
 		w.Header().Set("Cache-Control", "no-store")
 		w.Header().Set("Pragma", "no-cache")
