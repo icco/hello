@@ -15,6 +15,10 @@ RUN go build -ldflags="-s -w" -o /server .
 # ── Runtime image ─────────────────────────────────────────────────────────────
 FROM alpine:3.23
 
+LABEL org.opencontainers.image.source=https://github.com/icco/hello
+LABEL org.opencontainers.image.description="A simple hello"
+LABEL org.opencontainers.image.licenses=MIT
+
 RUN apk add --no-cache ca-certificates tzdata
 
 ENV NAT_ENV="production"
