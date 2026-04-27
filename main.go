@@ -8,10 +8,10 @@ import (
 	"time"
 
 	chi "github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 	"github.com/icco/gutil/logging"
 	"github.com/unrolled/render"
 	"github.com/unrolled/secure"
+	"go.uber.org/zap"
 )
 
 //go:embed templates
@@ -19,7 +19,6 @@ var embeddedTemplates embed.FS
 
 var (
 	service = "hello"
-	project = "icco-cloud"
 	log     = logging.Must(logging.NewLogger(service))
 )
 
@@ -42,7 +41,6 @@ func main() {
 	})
 
 	r := chi.NewRouter()
-	r.Use(middleware.RealIP)
 	r.Use(logging.Middleware(log.Desugar()))
 	r.Use(secureMiddleware.Handler)
 
@@ -69,6 +67,7 @@ type helloRespJSON struct {
 
 func hello(format string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		l := logging.FromContext(r.Context())
 		resp := helloRespJSON{"ok", "Hello World"}
 		re := render.New(render.Options{
 			FileSystem: &render.EmbedFileSystem{FS: embeddedTemplates},
@@ -83,9 +82,13 @@ func hello(format string) http.HandlerFunc {
 
 		switch format {
 		case "json":
-			re.JSON(w, http.StatusOK, resp)
+			if err := re.JSON(w, http.StatusOK, resp); err != nil {
+				l.Errorw("render json", zap.Error(err))
+			}
 		case "html":
-			re.HTML(w, http.StatusOK, "hello", resp)
+			if err := re.HTML(w, http.StatusOK, "hello", resp); err != nil {
+				l.Errorw("render html", zap.Error(err))
+			}
 		default:
 			http.Error(w, "invalid format", http.StatusBadRequest)
 		}
