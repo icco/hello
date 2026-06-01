@@ -32,6 +32,13 @@ var embeddedTemplates embed.FS
 const service = "hello"
 
 func main() {
+	if err := run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	log := logging.Must(logging.NewLogger(service))
 	defer func() {
 		if err := log.Sync(); err != nil {
@@ -47,8 +54,7 @@ func main() {
 	registry := prometheus.NewRegistry()
 	exporter, err := otelprom.New(otelprom.WithRegisterer(registry))
 	if err != nil {
-		log.Errorw("otel prometheus exporter", zap.Error(err))
-		os.Exit(1)
+		return fmt.Errorf("otel prometheus exporter: %w", err)
 	}
 	mp := sdkmetric.NewMeterProvider(sdkmetric.WithReader(exporter))
 	otel.SetMeterProvider(mp)
@@ -88,6 +94,7 @@ func main() {
 	if err := srv.Shutdown(shutdownCtx); err != nil {
 		log.Errorw("http shutdown", zap.Error(err))
 	}
+	return nil
 }
 
 // router builds the HTTP handler, wrapped with otelhttp (excluding /metrics).
