@@ -4,7 +4,7 @@ Guidance for coding agents working on hello.
 
 ## Project Overview
 
-A lightweight HTTP hello/health microservice in Go (`github.com/icco/hello`).
+A lightweight HTTP hello/health microservice in Go (`go.icco.me/hello`).
 
 ## Commands
 

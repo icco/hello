@@ -1,4 +1,4 @@
-module github.com/icco/hello
+module go.icco.me/hello
 
 go 1.26.2
 
