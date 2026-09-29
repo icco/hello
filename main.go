@@ -13,11 +13,11 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/icco/gutil/logging"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/unrolled/render"
 	"github.com/unrolled/secure"
+	"go.icco.me/gutil/logging"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/otel"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"

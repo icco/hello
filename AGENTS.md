@@ -4,7 +4,7 @@ Guidance for coding agents working on hello.
 
 ## Project Overview
 
-A lightweight HTTP hello/health microservice in Go (`github.com/icco/hello`).
+A lightweight HTTP hello/health microservice in Go (`go.icco.me/hello`).
 
 ## Commands
 
@@ -17,5 +17,5 @@ go build .       # Build binary
 
 ## Conventions
 
-- Follow icco Go conventions (`github.com/icco/gutil` for logging and HTTP helpers).
+- Follow icco Go conventions (`go.icco.me/gutil` for logging and HTTP helpers).
 - PR titles and commits must follow Conventional Commits with lowercase subjects.
