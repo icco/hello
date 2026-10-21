@@ -19,7 +19,7 @@ LABEL org.opencontainers.image.source=https://github.com/icco/hello
 LABEL org.opencontainers.image.description="A simple hello"
 LABEL org.opencontainers.image.licenses=MIT
 
-RUN apk add --no-cache ca-certificates tzdata
+RUN apk upgrade --no-cache ca-certificates ca-certificates-bundle && apk add --no-cache ca-certificates tzdata
 
 ENV NAT_ENV="production"
 
